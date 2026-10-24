@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz Quest Sounds</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { overflow: auto; }
+    .wrap { position: relative; width: min(820px, 100%); margin: 0 auto; padding: 32px 16px; }
+    .panel { background: #fff; border-radius: 32px; padding: 28px; box-shadow: 0 30px 80px rgba(10, 0, 60, .45); }
+    h1 { font-family: var(--display); font-weight: 700; color: var(--violet); margin: 0 0 4px; font-size: 40px; text-align: center; }
+    p.lead { text-align: center; color: var(--muted); font-weight: 800; margin: 0 0 20px; }
+    h2 { font-family: var(--display); font-weight: 600; font-size: 20px; margin: 18px 0 10px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+    .snd {
+      display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 18px;
+      background: #f6f4ff; border: 2px solid var(--line); font-family: var(--display); font-weight: 600; font-size: 18px; text-align: left;
+      transition: transform .12s, background .12s;
+    }
+    .snd:hover { transform: translateY(-2px); background: #efeaff; }
+    .snd span { font-size: 28px; }
+    .snd small { display: block; font-family: var(--text); font-weight: 700; font-size: 13px; color: var(--muted); }
+    .home-link { display: block; width: max-content; margin: 20px auto 0; font-weight: 800; color: var(--muted); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="bg" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
+  <div class="wrap">
+    <div class="panel">
+      <h1>🔊 Sound check</h1>
+      <p class="lead">Tap a button to hear each sound in the game.</p>
+      <div id="groups"></div>
+      <a class="home-link" href="index.html">← Back to the game</a>
+    </div>
+  </div>
+  <script src="sounds.js"></script>
+  <script>
+    const sfx = createSounds(() => true);
+    const GROUPS = [
+      ['Answers', [
+        ['✅', 'correct', 'Correct!', 'Chime + sparkle'],
+        ['🙈', 'wrong', 'Not this time', 'Soft "wah-wah"'],
+        ['🪙', 'coins', 'Points added', 'Coin ding'],
+        ['👀', 'reveal', 'Show answer', 'Ta-da bells'],
+      ]],
+      ['Surprise cards', [
+        ['✨', 'mystery', 'Surprise opens', 'Magic shimmer'],
+        ['⭐', 'star', 'Lucky Star', 'Sparkle run'],
+        ['🎁', 'gift', 'Be Kind', 'Music box'],
+        ['🧲', 'magnet', 'Magnet', 'Wobble zap'],
+        ['🔄', 'swap', 'Switcheroo', 'Swoosh swap'],
+        ['🚀', 'rocket', 'Rocket Boost', 'Slide whistle'],
+        ['🎈', 'again', 'Free Turn', 'Pop + boing'],
+        ['💣', 'bomb', 'Boom', 'Whistle + cartoon boom'],
+      ]],
+      ['Game', [
+        ['🃏', 'flip', 'Open a card', 'Whoosh'],
+        ['⏱', 'tick', 'Timer tick', 'Last 5 seconds'],
+        ['⏰', 'timeUp', "Time's up", 'Two bells'],
+        ['🏆', 'win', 'Winner', 'Fanfare + applause'],
+      ]],
+    ];
+    const root = document.getElementById('groups');
+    GROUPS.forEach(([title, items]) => {
+      const h = document.createElement('h2');
+      h.textContent = title;
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      items.forEach(([emoji, key, label, hint]) => {
+        const b = document.createElement('button');
+        b.className = 'snd';
+        b.innerHTML = `<span>${emoji}</span><div>${label}<small>${hint}</small></div>`;
+        b.addEventListener('click', sfx[key]);
+        grid.appendChild(b);
+      });
+      root.append(h, grid);
+    });
+  </script>
+</body>
+</html>
