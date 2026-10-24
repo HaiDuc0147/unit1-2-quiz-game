@@ -368,75 +368,86 @@
           ${opts}
         </div>
       </div>
-      <div class="m-actions">
+      <div class="m-actions pre">
         <button class="btn reveal">👀 Show answer</button>
         <button class="btn wrong">✗ Not this time</button>
         <button class="btn right">✓ Correct! +${pts}</button>
       </div>
-      <div class="keys"><kbd>1</kbd>–<kbd>4</kbd> team's answer · <kbd>Space</kbd> show answer / confirm · <kbd>C</kbd> correct · <kbd>X</kbd> not this time · <kbd>Esc</kbd> close</div>`, 'q t' + t);
+      <div class="m-actions post">
+        <div class="result"></div>
+        <button class="btn next">Next ▶</button>
+      </div>
+      <div class="keys"><kbd>1</kbd>–<kbd>4</kbd> team's answer · <kbd>C</kbd> correct · <kbd>X</kbd> not this time · <kbd>Space</kbd> show answer / next · <kbd>Esc</kbd> close</div>`, 'q t' + t);
 
     const img = card.querySelector('.m-img img');
     if (img) img.addEventListener('error', () => { img.closest('.m-img').remove(); card.querySelector('.m-body').classList.remove('has-img'); });
     card.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => pickOption(+b.dataset.k)));
-    card.querySelector('.m-close').addEventListener('click', () => { sfx.click(); closeModal(); });
-    card.querySelector('.reveal').addEventListener('click', reveal);
-    card.querySelector('.right').addEventListener('click', () => mark(true));
-    card.querySelector('.wrong').addEventListener('click', () => mark(false));
+    card.querySelector('.m-close').addEventListener('click', closeQuestion);
+    card.querySelector('.reveal').addEventListener('click', () => finish(null));
+    card.querySelector('.right').addEventListener('click', () => finish(true));
+    card.querySelector('.wrong').addEventListener('click', () => finish(false));
+    card.querySelector('.next').addEventListener('click', nextCard);
     if (G.timer) startTimer(G.timer);
   }
 
-  // Tapping the option the team chose reveals the answer straight away, with a correct / wrong sound.
+  // Tapping the option the team chose scores it straight away.
   function pickOption(k) {
     if (!current || current.revealed) return;
-    const card = $('#modalCard');
-    const opt = card.querySelector(`.opt[data-k="${k}"]`);
+    const opt = $('#modalCard').querySelector(`.opt[data-k="${k}"]`);
     if (!opt) return;
     opt.classList.add('picked');
-    reveal();
+    finish(opt.classList.contains('correct'));
   }
 
-  function reveal() {
+  // Ends a question and shows the answer. result: true = correct, false = not this time, null = answer shown, no points.
+  function finish(result) {
     if (!current || current.revealed || G.cards[current.index].kind !== 'q') return;
     current.revealed = true;
     stopTimer();
+    const i = current.index, c = G.cards[i], t = G.turn, team = G.teams[t];
     const card = $('#modalCard');
     card.classList.add('revealed');
-    const picked = card.querySelector('.opt.picked');
-    if (!picked) { sfx.reveal(); return; }
-    const ok = picked.classList.contains('correct');
-    current.played = ok ? 'correct' : 'wrong';
-    current.suggest = ok;
-    ok ? sfx.correct() : sfx.wrong();
-    card.querySelector(ok ? '.btn.right' : '.btn.wrong').classList.add('suggest');
-    if (ok) {
-      const r = picked.getBoundingClientRect();
-      confetti.burst(50, r.left + r.width / 2, r.top + r.height / 2, 10);
-    }
-  }
-
-  function mark(correct) {
-    if (!current || G.cards[current.index].kind !== 'q') return;
-    const i = current.index, c = G.cards[i], t = G.turn;
-    let gained = 0;
-    if (correct) {
+    let gained = 0, msg;
+    if (result) {
       gained = c.points * (G.double[t] ? 2 : 1);
       G.double[t] = false;
       G.scores[t] += gained;
-      if (current.played !== 'correct') sfx.correct();
-      setTimeout(sfx.coins, current.played === 'correct' ? 0 : 450);
-      const r = $(`.team-panel[data-team="${t}"]`).getBoundingClientRect();
-      confetti.burst(70, r.left + r.width / 2, r.bottom, 12);
-    } else if (current.played !== 'wrong') {
+      sfx.correct();
+      setTimeout(sfx.coins, 550);
+      const r = (card.querySelector('.opt.picked') || card.querySelector('.result')).getBoundingClientRect();
+      confetti.burst(80, r.left + r.width / 2, r.top + r.height / 2, 12);
+      msg = `🎉 +${gained} points for ${team.avatar} ${esc(team.name)}!`;
+    } else if (result === false) {
       sfx.wrong();
+      msg = '😅 No points this time';
+    } else {
+      sfx.reveal();
+      msg = "👀 Here's the answer!";
     }
+    const box = card.querySelector('.result');
+    box.innerHTML = msg;
+    box.className = 'result' + (result ? ' ok' : result === false ? ' no' : '');
     c.opened = true;
-    c.result = { team: t, correct, pts: gained };
-    closeModal();
-    flipCard(i);
+    c.result = { team: t, correct: !!result, pts: gained };
     G.turn = 1 - t;
     renderTeams(gained ? [[t, gained]] : []);
     save();
+  }
+
+  function nextCard() {
+    if (!current || !current.revealed) return;
+    const i = current.index;
+    closeModal();
+    sfx.click();
+    flipCard(i);
     checkEnd();
+  }
+
+  // Closing before the answer is shown leaves the card hidden; after that it works like Next.
+  function closeQuestion() {
+    if (current && current.revealed) return nextCard();
+    sfx.click();
+    closeModal();
   }
 
   function showSpecial(i) {
@@ -549,12 +560,11 @@
     }
     if (k === ' ' || k === 'enter') {
       e.preventDefault();
-      if (!current.revealed) reveal();
-      else if (current.suggest !== undefined) mark(current.suggest);
+      current.revealed ? nextCard() : finish(null);
     }
-    else if (k === 'c') mark(true);
-    else if (k === 'x' || k === 'w') mark(false);
-    else if (k === 'escape') closeModal();
+    else if (k === 'c') finish(true);
+    else if (k === 'x' || k === 'w') finish(false);
+    else if (k === 'escape') closeQuestion();
     else if ('1234'.includes(k) && k.length === 1) pickOption(+k - 1);
   });
 

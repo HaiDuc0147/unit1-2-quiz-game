@@ -27,13 +27,13 @@ window.QUIZ = {
     { id: 11, topic: "My things", level: 1, img: "images/Q11.png", q: "What's this?", options: ["comic book", "cell phone", "wallet", "e-reader"], answer: 2 },
     { id: 12, topic: "My things", level: 1, img: "images/Q12.png", q: "What's this?", options: ["wallet", "comic book", "e-reader", "cell phone"], answer: 1 },
 
-    // Unit 1 — Who's...? / Whose...? (write the full answer)
-    { id: 13, topic: "Who's…? Whose…?", level: 3, img: "images/Q13.png", type: "write", q: "Who's she?", cue: "aunt", answer: "She's my aunt.", alt: "She is my aunt." },
-    { id: 14, topic: "Who's…? Whose…?", level: 3, img: "images/Q14.png", type: "write", q: "Who are they?", cue: "grandparents", answer: "They're my grandparents.", alt: "They are my grandparents." },
-    { id: 15, topic: "Who's…? Whose…?", level: 3, img: "images/Q15.png", type: "write", q: "These are Tom's keys. Whose keys are these?", answer: "They're his.", alt: "They are his." },
-    { id: 16, topic: "Who's…? Whose…?", level: 3, img: "images/Q16.png", type: "write", q: "This is Mai's cell phone. Whose cell phone is this?", answer: "It's hers.", alt: "It is hers." },
-    { id: 17, topic: "Who's…? Whose…?", level: 3, img: "images/Q17.png", type: "write", q: "These are my glasses. Whose glasses are these?", answer: "They're mine.", alt: "They are mine." },
-    { id: 18, topic: "Who's…? Whose…?", level: 3, img: "images/Q18.png", type: "write", q: "These are Ben and Lily's comic books. Whose comic books are these?", answer: "They're theirs.", alt: "They are theirs." },
+    // Unit 1 — Who's...? / Whose...? (full-sentence answers)
+    { id: 13, topic: "Who's…? Whose…?", level: 3, img: "images/Q13.png", q: "Who's she?", options: ["He's my aunt.", "She's my aunt.", "She's my uncle.", "They're my aunt."], answer: 1 },
+    { id: 14, topic: "Who's…? Whose…?", level: 3, img: "images/Q14.png", q: "Who are they?", options: ["She's my grandparents.", "They're my parents.", "They're my grandparents.", "He's my grandparents."], answer: 2 },
+    { id: 15, topic: "Who's…? Whose…?", level: 3, img: "images/Q15.png", q: "These are Tom's keys. Whose keys are these?", options: ["They're his.", "They're hers.", "It's his.", "They're mine."], answer: 0 },
+    { id: 16, topic: "Who's…? Whose…?", level: 3, img: "images/Q16.png", q: "This is Mai's cell phone. Whose cell phone is this?", options: ["It's his.", "They're hers.", "It's mine.", "It's hers."], answer: 3 },
+    { id: 17, topic: "Who's…? Whose…?", level: 3, img: "images/Q17.png", q: "These are my glasses. Whose glasses are these?", options: ["They're yours.", "They're mine.", "It's mine.", "They're his."], answer: 1 },
+    { id: 18, topic: "Who's…? Whose…?", level: 3, img: "images/Q18.png", q: "These are Ben and Lily's comic books. Whose comic books are these?", options: ["They're ours.", "They're his.", "They're theirs.", "It's theirs."], answer: 2 },
 
     // Unit 2 — Fruit, vegetables, food and drinks
     { id: 19, topic: "Healthy food", level: 1, img: "images/Q19.png", q: "What are these?", options: ["peaches", "mangoes", "avocados", "potatoes"], answer: 1 },

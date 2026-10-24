@@ -7,11 +7,12 @@ A two-team classroom quiz board game (Family & Healthy Food) for the projector.
 
 ## How to play
 1. Type the team names, pick avatars, the number of cards (4–48), surprise cards, points and timer.
-2. A team picks a number. Tap the option the team says: the answer is revealed with a sound.
-3. Tap the glowing button (or press Space) to give the points. Turns switch automatically.
+2. A team picks a number. Tap the option the team says: the answer is revealed and points are given automatically, with a sound.
+   (Or use ✓ Correct / ✗ Not this time, or 👀 Show answer for no points.)
+3. Press Next ▶. Turns switch automatically.
 4. Surprise cards: ⭐ bonus, 💣 lose points, 🎁 give points, 🧲 take points, 🔄 swap scores, 🚀 double next answer, 🎈 free turn.
 
-Teacher shortcuts: `1`–`4` team's answer · `Space` show answer / confirm · `C` correct · `X` not this time · `Esc` close.
+Teacher shortcuts: `1`–`4` team's answer · `C` correct · `X` not this time · `Space` show answer / next · `Esc` close.
 Hover a team's score to add or take away 5 points by hand. The game saves itself, so a refresh can be resumed.
 
 ## Make a new quiz
